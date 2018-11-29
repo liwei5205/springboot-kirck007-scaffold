@@ -1,0 +1,6 @@
+/.metadata/
+/.recommenders/
+springboot-parent/springboot-service/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+springboot-parent/springboot-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+springboot-parent/springboot-mapper/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+springboot-parent/springboot-mapper/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
