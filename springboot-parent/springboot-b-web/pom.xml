@@ -7,6 +7,13 @@
   </parent>
   <artifactId>springboot-b-web</artifactId>
   
+  	<properties>
+        <shiro.version>1.4.0</shiro.version>
+        <shiro-redis.version>3.1.0</shiro-redis.version>
+        <fastjson.version>1.2.47</fastjson.version>
+        <swagger2.version>2.9.2</swagger2.version>    
+    </properties>
+  
      <dependencies>
   	    <dependency>
             <groupId>com.kirck</groupId>
@@ -42,18 +49,30 @@
 		<dependency>
 		    <groupId>io.springfox</groupId>
 		    <artifactId>springfox-swagger2</artifactId>
-		    <version>2.9.2</version>
+		     <version>${swagger2.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
 		<dependency>
 		    <groupId>io.springfox</groupId>
 		    <artifactId>springfox-swagger-ui</artifactId>
-		    <version>2.9.2</version>
+		     <version>${swagger2.version}</version>
 		</dependency> 
 		<dependency>
-    <groupId>com.alibaba</groupId>
-	    <artifactId>fastjson</artifactId>
-	    <version>1.2.47</version>
-	</dependency>
+	    	<groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.crazycake/shiro-redis -->
+		<dependency>
+		    <groupId>org.crazycake</groupId>
+		    <artifactId>shiro-redis</artifactId>
+		    <version>${shiro-redis.version}</version>
+		</dependency>
+        
       </dependencies>
 </project>

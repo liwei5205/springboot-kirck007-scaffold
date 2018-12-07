@@ -23,14 +23,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-		        		<!-- MP 核心库 -->
-    <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
-		<dependency>
-		    <groupId>com.baomidou</groupId>
-		    <artifactId>mybatis-plus-boot-starter</artifactId>
-		    <version>3.0.5</version>
-		</dependency>
-
        <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
 		<dependency>
 		   <groupId>com.alibaba</groupId>

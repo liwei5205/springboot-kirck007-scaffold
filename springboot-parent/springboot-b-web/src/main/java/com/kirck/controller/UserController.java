@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kirck.commen.NumberConstants;
 import com.kirck.commen.ResultStatus;
+import com.kirck.commen.utils.UUIDUtils;
 import com.kirck.entity.User;
 import com.kirck.service.UserService;
 
@@ -63,9 +63,32 @@ public class UserController {
 			 result.put("data", e);
 			 result.put("msg", "查询异常");
 			 result.put("code", ResultStatus.FAIL);
-		}finally{
-			return result;
 		}
+		return result;
+	}
+	
+	@GetMapping(value = "/insertOne")
+	@ResponseBody
+	@ApiOperation(value = "获取一个用户", httpMethod = "GET")
+	public  Map<String,Object> insertOne(@RequestParam(required = true)String id){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try {
+			User entity = new User();
+			entity.setId(UUIDUtils.getNewId());
+			entity.setNickname("土豆泥");
+			entity.setUsername("liwei5203");
+			entity.setPassword("62515608");
+			userService.saveOrUpdate(entity );
+			result.put("msg", "查询成功");
+			result.put("code", ResultStatus.SUCCESS);
+			result.put("data", entity);
+		}catch (Exception e) {
+			 logger.error("获取用户出现异常",e);
+			 result.put("data", e);
+			 result.put("msg", "查询异常");
+			 result.put("code", ResultStatus.FAIL);
+		}
+		return result;
 	}
 }
 

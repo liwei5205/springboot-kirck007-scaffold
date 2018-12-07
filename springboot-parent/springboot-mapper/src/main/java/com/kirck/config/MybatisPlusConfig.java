@@ -1,17 +1,55 @@
 package com.kirck.config;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.apache.ibatis.mapping.DatabaseIdProvider;
+import org.apache.ibatis.plugin.Interceptor;
+import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.util.StringUtils;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS;
+import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 
 @Configuration
 public class MybatisPlusConfig {
+	
+    @Autowired
+    private MybatisProperties properties;
+ 
+    @Autowired
+    private ResourceLoader resourceLoader = new DefaultResourceLoader();
+ 
+    @Autowired(required = false)
+    private Interceptor[] interceptors;
+ 
+    @Autowired(required = false)
+    private DatabaseIdProvider databaseIdProvider;
+	
+	@Value("${spring.master.type}")
+    private Class<? extends DataSource> dataSourceType;
+    @Value("${dataSource.readSize}")
+    private String dataSourceSize;
+    @Resource(name = "writeDataSource")
+    private DataSource dataSource;
+    @Resource(name = "readDataSources")
+    private List<DataSource> readDataSource;
 	
 	/***
      * plus 的性能优化
@@ -35,7 +73,58 @@ public class MybatisPlusConfig {
      */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
+         PaginationInterceptor page = new PaginationInterceptor();
+         page.setDialectType("mysql");
+         return page;
+    }
+    
+    @Bean
+    public MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean() {
+        MybatisSqlSessionFactoryBean mybatisPlus = new MybatisSqlSessionFactoryBean();
+        mybatisPlus.setDataSource(roundRobinDataSouceProxy());
+        mybatisPlus.setVfs(SpringBootVFS.class);
+        if (StringUtils.hasText(this.properties.getConfigLocation())) {
+            mybatisPlus.setConfigLocation(this.resourceLoader.getResource(this.properties.getConfigLocation()));
+        }
+        mybatisPlus.setConfiguration((MybatisConfiguration) properties.getConfiguration());
+        if (!ObjectUtils.isEmpty(this.interceptors)) {
+            mybatisPlus.setPlugins(this.interceptors);
+        }
+        MybatisConfiguration mc = new MybatisConfiguration();
+        mc.setDefaultScriptingLanguage(MybatisXMLLanguageDriver.class);
+        mybatisPlus.setConfiguration(mc);
+        if (this.databaseIdProvider != null) {
+            mybatisPlus.setDatabaseIdProvider(this.databaseIdProvider);
+        }
+        if (StringUtils.hasLength(this.properties.getTypeAliasesPackage())) {
+            mybatisPlus.setTypeAliasesPackage(this.properties.getTypeAliasesPackage());
+        }
+        if (StringUtils.hasLength(this.properties.getTypeHandlersPackage())) {
+            mybatisPlus.setTypeHandlersPackage(this.properties.getTypeHandlersPackage());
+        }
+        if (!ObjectUtils.isEmpty(this.properties.resolveMapperLocations())) {
+            mybatisPlus.setMapperLocations(this.properties.resolveMapperLocations());
+        }
+        return mybatisPlus;
+    }
+
+    
+    /**
+     * 有多少个数据源就要配置多少个bean
+     * @return
+     */
+    @Bean
+    public AbstractRoutingDataSource roundRobinDataSouceProxy() {
+        int size = Integer.parseInt(dataSourceSize);
+        MyAbstractRoutingDataSource proxy = new MyAbstractRoutingDataSource(size);
+        Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
+        targetDataSources.put(DataSourceType.write.getType(),dataSource);
+        for (int i = 0; i < size; i++) {
+            targetDataSources.put(i, readDataSource.get(i));
+        }
+        proxy.setDefaultTargetDataSource(dataSource);
+        proxy.setTargetDataSources(targetDataSources);
+        return proxy;
     }
 
 }
