@@ -33,7 +33,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	private UserMapper userMapper;
 	
 	@Override
-	@DS("slave")
 	public User selectById(String id) {
 		String cacheKey = RedisConstants.KEYPRE.KIRCK007+RedisConstants.OBJTYPE.USER+id;
 		User user = redisTemplate.opsForValue().get(cacheKey);
@@ -45,21 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				redisTemplate.opsForValue().set(cacheKey, user);
 			}
 		}
-		User selectByIdMaster = this.selectByIdMaster(id);
-		System.out.println(selectByIdMaster.getUsername());
-		User selectByIdSlave = this.selectByIdSlave(id);
-		System.out.println(selectByIdSlave.getUsername());
 		return user;
-	}
-	
-	
-	@DS("slave")
-	public User selectByIdSlave(String id) {
-		return this.getById(id);
-	}
-	
-	public User selectByIdMaster(String id) {
-		return this.getById(id);
 	}
 
 }

@@ -4,8 +4,7 @@ package com.kirck.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.kirck.commen.utils.MYUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kirck.commen.constants.ResultStatus;
-import com.kirck.commen.utils.UUIDUtils;
 import com.kirck.entity.User;
 import com.kirck.service.UserService;
 
@@ -74,7 +72,7 @@ public class UserController extends BaseController{
 		Map<String,Object> result = new HashMap<String,Object>();
 		try {
 			User entity = new User();
-			entity.setId(UUIDUtils.getNewId());
+			entity.setId(MYUUID.randomUUID().toString());
 			entity.setNickname("土豆泥");
 			entity.setUsername("liwei5203");
 			entity.setPassword("62515608");

@@ -22,7 +22,7 @@ import com.kirck.handler.MyExceptionHandler;
 import com.kirck.shiro.MyShiroRealm;
 import com.kirck.shiro.RedisSessionDao;
 
-@Configuration
+//@Configuration
 public class ShiroConfig {
 	
     private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
@@ -78,6 +78,7 @@ public class ShiroConfig {
 		
 		// 静态资源，以及特殊接口如 “登录” 等
 		filterChainDefinitionMap.put("/static/**", ANON);
+		filterChainDefinitionMap.put("/durid2/**", ANON);
 		filterChainDefinitionMap.put("/api/**", ANON);
 		filterChainDefinitionMap.put("/null/**", ANON);
 		filterChainDefinitionMap.put("/login", ANON);

@@ -1,4 +1,4 @@
-package com.kirck.commen;
+package com.kirck.commen.constants;
 
 public class NumberConstants {
 	public static final int ONE = 1;
