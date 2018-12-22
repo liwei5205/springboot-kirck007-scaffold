@@ -44,28 +44,28 @@ spring:
                 # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
                 connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
            slave:
-                  url: jdbc:mysql://192.168.4.213:3306/springboot_slave?serverTimezone=UTC&characterEncoding=utf-8
-                  username: root
-                  password: 123456
-                  platform: mysql
-                  driver_class_namel: com.mysql.jdbc.Driver
-                  type: com.alibaba.druid.pool.DruidDataSource
-                  max-active: 20
-                  initial-size: 1
-                  min-idle: 3
-                  max-wait: 600
-                  time-between-eviction-runs-millis: 60000
-                  min-evictable-idle-time-millis: 30000
-                  validationQuery: SELECT 1 FROM DUAL
-                  test-while-idle: true
-                  test-on-borrow: false
-                  test-on-return: false
-                  poolPreparedStatements: true
-                  maxPoolPreparedStatementPerConnectionSize: 20
-                  # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-                  filters: stat,wall,slf4j
-                  # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-                  connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000 
+                 url: jdbc:mysql://192.168.4.213:3306/springboot_slave?serverTimezone=UTC&characterEncoding=utf-8
+                 username: root
+                 password: 123456
+                 platform: mysql
+                 driver_class_namel: com.mysql.jdbc.Driver
+                 type: com.alibaba.druid.pool.DruidDataSource
+                 max-active: 20
+                 initial-size: 1
+                 min-idle: 3
+                 max-wait: 600
+                 time-between-eviction-runs-millis: 60000
+                 min-evictable-idle-time-millis: 30000
+                 validationQuery: SELECT 1 FROM DUAL
+                 test-while-idle: true
+                 test-on-borrow: false
+                 test-on-return: false
+                 poolPreparedStatements: true
+                 maxPoolPreparedStatementPerConnectionSize: 20
+                 # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+                 filters: stat,wall,slf4j
+                 # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+                 connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000 
          
 #mybatis
 mybatis-plus:
