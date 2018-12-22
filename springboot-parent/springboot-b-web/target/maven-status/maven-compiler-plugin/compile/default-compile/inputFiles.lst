@@ -1,0 +1,14 @@
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\config\MVCConfig.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\controller\OapiController.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\controller\Init.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\shiro\RedisSessionDao.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\controller\BaseController.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\config\RedisConfig.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\config\Swagger2Configuration.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\controller\UserController.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\inter\AllInterceptor.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\shiro\MySessionManager.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\BWebApplication.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\handler\MyExceptionHandler.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\config\ShiroConfig.java
+F:\springboot-kirck007-scaffold\springboot-parent\springboot-b-web\src\main\java\com\kirck\shiro\MyShiroRealm.java

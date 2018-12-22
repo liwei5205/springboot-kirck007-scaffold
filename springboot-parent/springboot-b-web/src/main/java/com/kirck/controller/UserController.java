@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kirck.commen.ResultStatus;
+import com.kirck.commen.constants.ResultStatus;
 import com.kirck.commen.utils.UUIDUtils;
 import com.kirck.entity.User;
 import com.kirck.service.UserService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -28,12 +29,11 @@ import io.swagger.annotations.ApiOperation;
  * @author kirck007
  * @since 2018-11-28
  */
+@Api(value = "人员controller", tags = { "人员操作接口" })
 @RestController
-@RequestMapping("/user")
-public class UserController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-	
+@RequestMapping("user")
+public class UserController extends BaseController{
+		
 	@Autowired
 	private UserService userService;
 	

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kirck007.mapper.AccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kirck007.entity.Account">
+        <id column="id" property="id" />
+        <result column="company_id" property="companyId" />
+        <result column="user_id" property="userId" />
+        <result column="login_id" property="loginId" />
+        <result column="pwd" property="pwd" />
+        <result column="salt" property="salt" />
+        <result column="account_name" property="accountName" />
+        <result column="status" property="status" />
+        <result column="wx_uid" property="wxUid" />
+        <result column="create_date" property="createDate" />
+        <result column="create_uid" property="createUid" />
+        <result column="update_date" property="updateDate" />
+        <result column="update_uid" property="updateUid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, company_id, user_id, login_id, pwd, salt, account_name, status, wx_uid, create_date, create_uid, update_date, update_uid
+    </sql>
+
+</mapper>

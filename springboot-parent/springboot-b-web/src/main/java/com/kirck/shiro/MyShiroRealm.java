@@ -1,7 +1,5 @@
 package com.kirck.shiro;
 
-import javax.annotation.Resource;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -10,12 +8,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
-import com.kirck.service.UserService;
-
 public class MyShiroRealm extends AuthorizingRealm{
-
-	 	@Resource
-	    private UserService userService;
 	 	
 	 	/**
 	 	 * 执行授权逻辑

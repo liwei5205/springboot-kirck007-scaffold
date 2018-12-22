@@ -3,11 +3,13 @@ package com.kirck.service.impl;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kirck.commen.RedisConstants;
+import com.kirck.commen.constants.RedisConstants;
+import com.kirck.entity.Account;
 import com.kirck.entity.User;
 import com.kirck.mapper.UserMapper;
 import com.kirck.service.UserService;
@@ -20,11 +22,14 @@ import com.kirck.service.UserService;
  * @author kirck007
  * @since 2018-11-28
  */
-@Service
+@Service("userMapper")
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
 	@Resource
     RedisTemplate<String,User> redisTemplate;
+	
+	@Autowired
+	private UserMapper userMapper;
 	
 	@Override
 	public User selectById(String id) {

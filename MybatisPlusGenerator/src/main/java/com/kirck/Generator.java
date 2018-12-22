@@ -29,7 +29,7 @@ public class Generator {
 	    //作者
 	    private static String authorName = "kirck007";
 	    //要生成的表名
-	    private static String[] tables = {"user"};
+	    private static String[] tables = {"account"};
 	    //table前缀
 	    private static String prefix = "JS_";
 
