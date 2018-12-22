@@ -1,5 +1,6 @@
 package com.kirck.service;
 
+import com.kirck.entity.Account;
 import com.kirck.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2018-11-28
  */
 public interface UserService extends IService<User> {
+	
+	/**
+	 * 通过主键查询User
+	 * @param id
+	 * @return
+	 */
+	User selectById(String id);
 
 }
