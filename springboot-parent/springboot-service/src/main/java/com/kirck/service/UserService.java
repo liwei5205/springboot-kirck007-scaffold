@@ -1,6 +1,6 @@
 package com.kirck.service;
 
-import com.kirck.entity.Account;
+import com.kirck.config.annotation.DS;
 import com.kirck.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,5 +20,13 @@ public interface UserService extends IService<User> {
 	 * @return
 	 */
 	User selectById(String id);
+
+	/**
+	 *
+	 * @param user
+	 * @return
+	 */
+	@DS("slave")
+	boolean saveOrUpdate(User user);
 
 }

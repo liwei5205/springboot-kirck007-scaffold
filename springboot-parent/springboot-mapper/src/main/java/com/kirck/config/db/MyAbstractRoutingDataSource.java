@@ -1,6 +1,9 @@
-package com.kirck.config;
+package com.kirck.config.db;
 
 
+import com.kirck.config.datasource.DataSourceContextHolder;
+import com.kirck.config.datasource.DataSourceType;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 
@@ -18,12 +21,9 @@ public class MyAbstractRoutingDataSource  extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         String typeKey = DataSourceContextHolder.getJdbcType();
-        if (typeKey.equals(DataSourceType.write.getType()))
+        if (StringUtils.isNotBlank(typeKey)&&typeKey.equals(DataSourceType.write.getType()))
             return DataSourceType.write.getType();
         // 读 简单负载均衡
-        int number = count.getAndAdd(1);
-        int lookupKey = number % dataSourceNumber;
-        Integer i = lookupKey;
-        return i;
+        return DataSourceType.read.getType();
     }
 }

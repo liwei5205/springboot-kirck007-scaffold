@@ -1,7 +1,7 @@
-package com.kirck.config;
+package com.kirck.config.datasource;
 
 public enum DataSourceType {
-    read("read", "从库"), write("write", "主库");
+    read("slave", "从库"), write("master", "主库");
     private String type;
     private String name;
 
