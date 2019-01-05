@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {
+      "name": "",
+      "type": "com.kirck.config.RedisConfig$DataJedisProperties",
+      "sourceType": "com.kirck.config.RedisConfig$DataJedisProperties"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kirck.mapper.TMerchantMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kirck.entity.TMerchant">
+        <id column="id" property="id" />
+        <result column="merchant_name" property="merchantName" />
+        <result column="short_name" property="shortName" />
+        <result column="type" property="type" />
+        <result column="style" property="style" />
+        <result column="notes" property="notes" />
+        <result column="brand_id" property="brandId" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, merchant_name, short_name, type, style, notes, brand_id, create_date, update_date, status
+    </sql>
+
+</mapper>

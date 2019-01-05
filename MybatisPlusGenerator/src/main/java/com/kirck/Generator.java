@@ -25,11 +25,11 @@ public class Generator {
 		private static String canonicalPath = "";
 
 	    //基本包名
-	    private static String basePackage = "com.kirck007";
+	    private static String basePackage = "com.kirck";
 	    //作者
 	    private static String authorName = "kirck007";
 	    //要生成的表名
-	    private static String[] tables = {"account"};
+	    private static String[] tables = {"t_branch_deal","t_branch_point","t_deal_info","t_merchant","t_merchant_branch","t_merchant_deal","t_sys_area"};
 	    //table前缀
 	    private static String prefix = "JS_";
 
@@ -37,9 +37,9 @@ public class Generator {
 	    private static DbType dbType = DbType.MYSQL;
 	    //数据库配置四要素
 	    private static String driverName = "com.mysql.jdbc.Driver";
-	    private static String url = "jdbc:mysql://192.168.4.213:3306/springboot_study?serverTimezone=UTC&characterEncoding=utf-8";
-	    private static String username = "root";
-	    private static String password = "123456";
+	    private static String url = "jdbc:mysql://106.12.86.89:3306/dianpingdev?serverTimezone=UTC&characterEncoding=utf-8";
+	    private static String username = "myuser";
+	    private static String password = "Qq276532727@com";
 
 
 	    public static void main(String[] args) {
