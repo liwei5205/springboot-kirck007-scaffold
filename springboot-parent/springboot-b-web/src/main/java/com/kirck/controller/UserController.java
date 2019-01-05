@@ -37,13 +37,6 @@ public class UserController extends BaseController{
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping(value = "/hello")
-	@ResponseBody
-	@ApiOperation(value = "欢迎", httpMethod = "GET")
-	public String login(){
-		return "hello";
-	}
-	
 	@GetMapping(value = "/getOne")
 	@ResponseBody
 	@ApiOperation(value = "获取一个用户", httpMethod = "GET")

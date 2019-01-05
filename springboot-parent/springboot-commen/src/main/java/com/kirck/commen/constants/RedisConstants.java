@@ -16,16 +16,14 @@ public class RedisConstants {
 	public static String SPLITTER = ":";
 
 	public interface KEYPRE {
-		static String KIRCK = "kirck" + SPLITTER;
-		static String KIRCK007 = "KIRCK007" + SPLITTER;
+		 String KIRCK = "kirck" + SPLITTER;
+		 String KIRCK007 = "KIRCK007" + SPLITTER;
+		String DIANPING = "dianping" + SPLITTER;
 	}
 
 	public interface OBJTYPE {
-		static String USER = "user" + SPLITTER;
-		static String TOPIC = "topic" + SPLITTER;
-		static String TOKEN = "token" + SPLITTER;
-		static String SIGN = "sign" + SPLITTER;
-		static String ACCOUNT = "account" + SPLITTER;
-		static String ORGAN = "organ" + SPLITTER;
+		 String USER = "user" + SPLITTER;
+		 String ACCOUNT = "account" + SPLITTER;
+		String COOKIES = "cookies" + SPLITTER;
 	}
 }

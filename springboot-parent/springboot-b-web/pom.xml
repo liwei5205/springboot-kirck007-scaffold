@@ -50,8 +50,10 @@
             <version>${fastjson.version}</version>
 		</dependency>
          <dependency>
-             <groupId>org.springframework.boot</groupId>
-             <artifactId>spring-boot-starter-test</artifactId>
+             <groupId>org.seleniumhq.selenium</groupId>
+             <artifactId>selenium-java</artifactId>
+             <version>3.14.0</version>
          </dependency>
       </dependencies>
+     <packaging>war</packaging>
 </project>
