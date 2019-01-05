@@ -1,22 +1,20 @@
 package com.kirck.controller;
 
 import javax.annotation.Resource;
+import javax.lang.model.element.Element;
 
 
 import com.alibaba.fastjson.JSONObject;
 import com.kirck.commen.constants.RedisConstants;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.apache.commons.exec.util.MapUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -50,7 +48,7 @@ public class DriverController extends BaseController{
     @ApiOperation(value = "欢迎", httpMethod = "GET")
     public String login(Integer index){
 
-        browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/project/chromedriver.exe");
+        browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/qycache/chromedriver.exe");
 
         boolean f = true;
         while (f) {
@@ -62,7 +60,6 @@ public class DriverController extends BaseController{
                 browser.get(HOMEURL);
                 for (Map<String,Object> temp : cookies) {
                     Cookie parse = JSONObject.parseObject(JSONObject.toJSONString(temp), Cookie.class);
-                    System.out.println(parse.toString());
                     browser.manage().addCookie(parse);
                 }
                 f = false;
@@ -71,8 +68,26 @@ public class DriverController extends BaseController{
         browser.get(NEWDEALURL+index);
 
         WebDriverWait webDriverWait=new WebDriverWait(browser,5);
-        String text = webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("body"))).getText();
-        System.out.println(text);
+        try {
+            while (true) {
+                Thread.sleep(2000L);
+                if (!browser.getCurrentUrl().startsWith(LOGINURL)) {
+                    break;
+                }
+            }
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+       List<WebElement> elements = browser.findElements(By.cssSelector("li[class=tg-floor-item]"));
+        for (WebElement element : elements) {
+            //获取属性值
+            String str = element.getAttribute("data-static-deal-id");
+            System.out.println("data-static-deal-id:"+str);
+            System.out.println("---------------------------");
+            System.out.println(element.findElement(By.tagName("h3")).getText());
+            System.out.println("---------------------------");
+        }
+
         closeBrowser(browser);
         return "hello";
     }

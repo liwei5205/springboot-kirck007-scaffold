@@ -24,11 +24,11 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="springboot-b-web" options="-parameters" />
-      <module name="springboot-commen" options="-parameters" />
-      <module name="springboot-entity" options="-parameters" />
-      <module name="springboot-mapper" options="-parameters" />
-      <module name="springboot-service" options="-parameters" />
+      <module name="springboot-b-web" options="" />
+      <module name="springboot-commen" options="" />
+      <module name="springboot-entity" options="" />
+      <module name="springboot-mapper" options="" />
+      <module name="springboot-service" options="" />
     </option>
   </component>
 </project>
