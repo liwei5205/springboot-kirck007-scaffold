@@ -43,9 +43,9 @@ public class DruidConfiguration {
 	        /** 黑名单，与白名单存在相同IP时，优先于白名单 */
 	        servletRegistrationBean.addInitParameter("deny","192.0.0.1");
 	        /** 用户名 */
-	        servletRegistrationBean.addInitParameter("loginUsername","admin");
+	        servletRegistrationBean.addInitParameter("loginUsername","root");
 	        /** 密码 */
-	        servletRegistrationBean.addInitParameter("loginPassword","admin");
+	        servletRegistrationBean.addInitParameter("loginPassword","123456");
 	        /** 禁用页面上的“Reset All”功能 */
 	        servletRegistrationBean.addInitParameter("resetEnable","false");
 	        return servletRegistrationBean;
