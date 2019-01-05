@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import com.alibaba.fastjson.JSONObject;
 import com.kirck.commen.constants.RedisConstants;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -33,32 +35,34 @@ public class DriverController extends BaseController{
 
     private static ChromeDriver browser;
     private final  static  String LOGINURL = "https://account.dianping.com/login";
-    private final static  String NEWDEALURL = "http://t.dianping.com/list/shanghai-category_1";
+    private final static  String NEWDEALURL = "http://t.dianping.com/list/shanghai-category_1?desc=1&sort=new&pageIndex=";
     private final  static String COOKIEPATH = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.COOKIES;
+    private final static String  USERNAME = "18571844624";
+    private final static String  PASSWORD = "Qq276532727";
 
     @GetMapping(value = "/hello")
     @ResponseBody
     @ApiOperation(value = "欢迎", httpMethod = "GET")
-    public String login(String userName,String password){
+    public String login(Integer index){
 
         browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/project/chromedriver.exe");
 
         boolean f = true;
         while (f) {
-            Set<Cookie> cookies = (Set<Cookie>) redisTemplate.opsForValue().get(COOKIEPATH + userName);
-            if (CollectionUtils.isEmpty(cookies)) {
-                loginDianPing(browser, userName, password);
+            Object cookies = redisTemplate.opsForValue().get(COOKIEPATH + USERNAME);
+            if (cookies==null) {
+                loginDianPing(browser, USERNAME, PASSWORD);
             }else{
-                for (Object temp : cookies) {
-                    Cookie cookie = JSONObject.parseObject(JSONObject.toJSONString(temp), Cookie.class);
-                    browser.manage().addCookie(cookie);
+                List<Cookie> cookieList = JSONObject.parseArray(JSONObject.toJSONString(cookies), Cookie.class);
+                for (Cookie temp : cookieList) {
+                    browser.manage().addCookie(temp);
                 }
                 f = false;
             }
         }
-        browser.get(NEWDEALURL);
+        browser.get(NEWDEALURL+index);
         WebDriverWait webDriverWait=new WebDriverWait(browser,5);
-        String text = webDriverWait.until(ExpectedConditions.elementToBeClickable(By.className("tg-floor-list Fix tg-floor-list-freak"))).getText();
+        String text = webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("body"))).getText();
         System.out.println(text);
         closeBrowser(browser);
         return "hello";
@@ -81,12 +85,12 @@ public class DriverController extends BaseController{
         //设定网址
         webDriver.get(LOGINURL);
         //显示等待控制对象
-        WebDriverWait webDriverWait=new WebDriverWait(webDriver,10);
+/*        WebDriverWait webDriverWait=new WebDriverWait(webDriver,10);
         webDriverWait.until(ExpectedConditions.elementToBeClickable(By.linkText("账号登录"))).click();
         webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("tab-account"))).click();
         webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("account-textbox"))).sendKeys(userName);
         webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("password-textbox"))).sendKeys(password);
-        webDriver.findElement(By.id("login-button-account")).click();
+        webDriver.findElement(By.id("login-button-account")).click();*/
         //等待2秒用于页面加载，保证Cookie响应全部获取。
         try {
             Thread.sleep(10000);
@@ -95,8 +99,9 @@ public class DriverController extends BaseController{
         }
 
         Set<Cookie> cookies=webDriver.manage().getCookies();
+        String cookiesStr = JSONObject.toJSONString(cookies);
         if(cookies!=null){
-            redisTemplate.opsForValue().set(COOKIEPATH+userName,cookies);
+            redisTemplate.opsForValue().set(COOKIEPATH+userName,cookiesStr);
         }
     }
 }
