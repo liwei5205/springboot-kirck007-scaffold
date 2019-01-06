@@ -36,10 +36,10 @@ public class DriverController extends BaseController{
     RedisTemplate<String, List<Map<String,Object>>> redisTemplate;
 
     private static ChromeDriver browser;
-    private final  static  String HOMEURL = "http://www.dianping.com";
-    private final  static  String LOGINURL = "https://account.dianping.com/login";
-    private final static  String NEWDEALURL = "http://t.dianping.com/list/shanghai-category_1?desc=1&sort=new&pageIndex=";
-    private final  static String COOKIEPATH = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.COOKIES;
+    private final static String HOMEURL = "http://www.dianping.com";
+    private final static String LOGINURL = "https://account.dianping.com/login";
+    private final static String NEWDEALURL = "http://t.dianping.com/list/shanghai-category_1?desc=1&sort=new&pageIndex=";
+    private final static String COOKIEPATH = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.COOKIES;
     private final static String  USERNAME = "18571844624";
     private final static String  PASSWORD = "Qq276532727";
 
@@ -47,16 +47,20 @@ public class DriverController extends BaseController{
     @ResponseBody
     @ApiOperation(value = "欢迎", httpMethod = "GET")
     public String login(Integer index){
-
-        browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/qycache/chromedriver.exe");
-
+        
+        //打开浏览器
+        browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/project/chromedriver.exe");
         boolean f = true;
         while (f) {
+            //看一下有没有cookie缓存
             List<Map<String,Object>> cookies =  redisTemplate.opsForValue().get(COOKIEPATH + USERNAME);
             if (cookies==null) {
+                //重新登陆
                 loginDianPing(browser, USERNAME, PASSWORD);
             }else{
+                //清除原有cookie
                 browser.manage().deleteAllCookies();
+                //添加cookie需要访问一个同域名页面
                 browser.get(HOMEURL);
                 for (Map<String,Object> temp : cookies) {
                     Cookie parse = JSONObject.parseObject(JSONObject.toJSONString(temp), Cookie.class);
