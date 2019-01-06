@@ -12,4 +12,9 @@ public interface IDianPingService {
 	 */
 	void saveOrUpdate(List<MerchantDeal> merchantDeals);
 
+	/**
+	 * 获取最近一条记录的url_id
+	 * @return
+	 */
+	String getTheLastDeal();
 }

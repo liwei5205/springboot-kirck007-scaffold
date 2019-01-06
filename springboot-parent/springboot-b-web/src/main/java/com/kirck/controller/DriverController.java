@@ -108,7 +108,7 @@ public class DriverController extends BaseController{
 			//merchantDeal.setNotes(webElement.findElement(By.tagName("h4")).getText());
 			merchantDeal.setPrice(new BigDecimal(webElement.findElement(By.tagName("em")).getText()));
 			merchantDeal.setStorePrice(new BigDecimal(webElement.findElement(By.tagName("del")).getText()));
-			merchantDeal.setUrl(href);
+			//merchantDeal.setUrl(href);
 			merchantDeals.add(merchantDeal);
 		}
 		dianPingService.saveOrUpdate(merchantDeals);

@@ -60,7 +60,7 @@ public class Area extends Model<Area> {
         /**
      * 行政区域Id
      */
-         @TableField("areaID")
+         @TableField("area_iD")
     private Integer areaID;
 
         /**

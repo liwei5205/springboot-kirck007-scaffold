@@ -1,16 +1,6 @@
 package com.kirck.commen.constants;
 
 public class SysConstants {
-	public interface Token {
-		/**
-		 * 缓存设置为1小时
-		 */
-		public static final int CACHE_TIME_HOUR = 1;
-		/**
-		 * 缓存设置为 3600 秒
-		 */
-		public static final int CACHE_TIME_SECOND = 3600;
-	}
 
 	// 特殊符号
 	public interface Symbol {
@@ -49,6 +39,20 @@ public class SysConstants {
 
 		public static final String COLON = ":";
 
+	}
+
+	//sysCofig
+	public interface SysConfig {
+		String CHROMEDRIVER = "webdriver.chrome.driver";
+		String CHROMEDRIVERPATH = "D:/project/chromedriver.exe";
+		String DIANPINGLOGINURL = "https://account.dianping.com/login";
+		String DIANPINGHOMEURL = "http://www.dianping.com";
+		//"http://t.dianping.com/list/shanghai-category_1?desc=1&sort=new&pageIndex=0"
+		String DIANPINGLIST = "http://t.dianping.com/list";
+		String CATEGORY = "category";
+		String NEWSORT = "desc=1&sort=new&pageIndex=";
+		String USERNAME = "18571844624";
+		String PASSWORD = "Qq276532727";
 	}
 
 }

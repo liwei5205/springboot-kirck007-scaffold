@@ -2,6 +2,7 @@ package com.kirck.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,13 @@ public class DianPingServiceImpl extends AbstractService implements IDianPingSer
 			merchantDealMapper.insert(merchantDeal);
 		}
 	}
-	
+
+	@Override
+	public String getTheLastDeal() {
+		QueryWrapper<MerchantDeal> merchantDealWrapper = new QueryWrapper<MerchantDeal>();
+		merchantDealWrapper.orderByDesc("create_date");
+		MerchantDeal merchantDeal = merchantDealMapper.selectOne(merchantDealWrapper);
+		return merchantDeal==null?"-1":merchantDeal.getDianpingUrlId();
+	}
+
 }

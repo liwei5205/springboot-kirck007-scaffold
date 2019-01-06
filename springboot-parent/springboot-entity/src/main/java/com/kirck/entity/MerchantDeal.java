@@ -7,10 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -37,16 +40,12 @@ public class MerchantDeal extends Model<MerchantDeal> {
 	private BigDecimal price;
 	@TableField("store_price")
 	private BigDecimal storePrice;
-
-	/**
-	 * app地址
-	 */
-	@TableField("app_url")
-	private String appUrl;
-	@TableField("url")
-	private String url;
+	@TableField("dianping_url_id")
+	private String dianpingUrlId;
 	@TableField("notes")
 	private String notes;
+	@TableField("create_date")
+	private LocalDateTime createDate;
 
 	@Override
 	protected Serializable pkVal() {
@@ -93,12 +92,12 @@ public class MerchantDeal extends Model<MerchantDeal> {
 		this.storePrice = storePrice;
 	}
 
-	public String getAppUrl() {
-		return appUrl;
+	public String getDianpingUrlId() {
+		return dianpingUrlId;
 	}
 
-	public void setAppUrl(String appUrl) {
-		this.appUrl = appUrl;
+	public void setDianpingUrlId(String dianpingUrlId) {
+		this.dianpingUrlId = dianpingUrlId;
 	}
 
 	public String getNotes() {
@@ -109,12 +108,11 @@ public class MerchantDeal extends Model<MerchantDeal> {
 		this.notes = notes;
 	}
 
-	public String getUrl() {
-		return url;
+	public LocalDateTime getCreateDate() {
+		return createDate;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
 	}
-
 }
