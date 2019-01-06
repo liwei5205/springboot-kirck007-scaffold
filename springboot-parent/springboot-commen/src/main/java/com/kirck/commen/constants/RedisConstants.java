@@ -25,5 +25,6 @@ public class RedisConstants {
 		 String USER = "user" + SPLITTER;
 		 String ACCOUNT = "account" + SPLITTER;
 		String COOKIES = "cookies" + SPLITTER;
+		String CATEGORY = "category" + SPLITTER;
 	}
 }

@@ -1,31 +1,35 @@
 package com.kirck.controller;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Resource;
-import javax.lang.model.element.Element;
 
-
-import com.alibaba.fastjson.JSONObject;
-import com.kirck.commen.constants.RedisConstants;
-import io.swagger.annotations.ApiOperation;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
+import com.kirck.commen.constants.RedisConstants;
+import com.kirck.commen.utils.UUIDUtils;
+import com.kirck.entity.MerchantDeal;
 
 import io.swagger.annotations.Api;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import io.swagger.annotations.ApiOperation;
 
 @Api(value = "浏览器相关controller", tags = { "登录操作接口" })
 @RestController
@@ -40,61 +44,84 @@ public class DriverController extends BaseController{
     private final static String LOGINURL = "https://account.dianping.com/login";
     private final static String NEWDEALURL = "http://t.dianping.com/list/shanghai-category_1?desc=1&sort=new&pageIndex=";
     private final static String COOKIEPATH = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.COOKIES;
+    private final static String CATEGORYPATH = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.CATEGORY;
     private final static String  USERNAME = "18571844624";
     private final static String  PASSWORD = "Qq276532727";
 
-    @GetMapping(value = "/hello")
-    @ResponseBody
-    @ApiOperation(value = "欢迎", httpMethod = "GET")
-    public String login(Integer index){
+	@GetMapping(value = "/hello")
+	@ResponseBody
+	@ApiOperation(value = "欢迎", httpMethod = "GET")
+	public String setCategoryAll(Integer index) {
 
-        //打开浏览器
-        browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/project/chromedriver.exe");
-        boolean f = true;
-        while (f) {
-            //看一下有没有cookie缓存
-            List<Map<String,Object>> cookies =  redisTemplate.opsForValue().get(COOKIEPATH + USERNAME);
-            if (cookies==null) {
-                //重新登陆
-                loginDianPing(browser, USERNAME, PASSWORD);
-            }else{
-                //清除原有cookie
-                browser.manage().deleteAllCookies();
-                //添加cookie需要访问一个同域名页面
-                browser.get(HOMEURL);
-                for (Map<String,Object> temp : cookies) {
-                    Cookie parse = JSONObject.parseObject(JSONObject.toJSONString(temp), Cookie.class);
-                    browser.manage().addCookie(parse);
-                }
-                f = false;
-            }
-        }
-        browser.get(NEWDEALURL+index);
+		// 打开浏览器
+		browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/project/chromedriver.exe");
+		boolean f = true;
+		while (f) {
+			// 看一下有没有cookie缓存
+			List<Map<String, Object>> cookies = redisTemplate.opsForValue().get(COOKIEPATH + USERNAME);
+			if (cookies == null) {
+				// 重新登陆
+				loginDianPing(browser, USERNAME, PASSWORD);
+			} else {
+				// 清除原有cookie
+				browser.manage().deleteAllCookies();
+				// 添加cookie需要访问一个同域名页面
+				browser.get(HOMEURL);
+				for (Map<String, Object> temp : cookies) {
+					// 添加cookies
+					Cookie parse = JSONObject.parseObject(JSONObject.toJSONString(temp), Cookie.class);
+					browser.manage().addCookie(parse);
+				}
+				f = false;
+			}
+		}
+		// 跳转到最新信息链接
+		browser.get(NEWDEALURL + index);
+		// 等待是否跳转成功
+		try {
+			while (true) {
+				Thread.sleep(2000L);
+				if (!browser.getCurrentUrl().startsWith(LOGINURL)) {
+					break;
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// 团购信息存储
+		List<MerchantDeal> merchantDeals = new ArrayList<MerchantDeal>();
 
-        WebDriverWait webDriverWait=new WebDriverWait(browser,5);
-        try {
-            while (true) {
-                Thread.sleep(2000L);
-                if (!browser.getCurrentUrl().startsWith(LOGINURL)) {
-                    break;
-                }
-            }
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-       List<WebElement> elements = browser.findElements(By.cssSelector("li[class=tg-floor-item]"));
-        for (WebElement element : elements) {
-            //获取属性值
-            String str = element.getAttribute("data-static-deal-id");
-            System.out.println("data-static-deal-id:"+str);
-            System.out.println("---------------------------");
-            System.out.println(element.findElement(By.tagName("h3")).getText());
-            System.out.println("---------------------------");
-        }
+		WebElement element = browser.findElement(By.cssSelector("div.tg-tab-box.tg-floor.on"));
+		// 获取属性值
+		List<WebElement> elements2 = element.findElements(By.cssSelector("div.tg-floor-item-wrap"));
+		for (WebElement webElement : elements2) {
+			MerchantDeal merchantDeal = new MerchantDeal();
+			String href = webElement.findElement(By.cssSelector("a.tg-floor-img")).getAttribute("href");
+			merchantDeal.setId(UUIDUtils.getNewId());
+			// merchantDeal.setMerchantId(merchantId);
+			merchantDeal.setNotes(element.findElement(By.tagName("h4")).getText());
+			merchantDeal.setPrice(new BigDecimal(element.findElement(By.tagName("em")).getText()));
+			merchantDeal.setStorePrice(new BigDecimal(element.findElement(By.tagName("del")).getText()));
 
-        closeBrowser(browser);
-        return "hello";
-    }
+		}
+		closeBrowser(browser);
+		return "hello";
+	}
+
+	private void setCategoryAll() {
+		List<WebElement> elements = browser.findElements(By.cssSelector("dl.tg-classify-all.tg-classify-flat.Fix"));
+		for (WebElement element : elements) {
+			// 获取属性值
+			// String str = element.getAttribute("data-static-deal-id");
+			List<WebElement> elements2 = element.findElements(By.tagName("a"));
+			Map<String, String> map = new HashMap<String, String>();
+			for (WebElement webElement : elements2) {
+				String category = webElement.getAttribute("href");
+				map.put(webElement.getText(), category.substring(category.indexOf('_')+1, category.indexOf('?')));
+			}
+			redisTemplate.opsForHash().putAll(CATEGORYPATH, map);
+		}
+	}
 
     private WebDriver openBrowser(String driverType, String driverPath){
         System.getProperties().setProperty(driverType,driverPath);

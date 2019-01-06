@@ -52,4 +52,76 @@ public class MerchantDeal extends Model<MerchantDeal> {
         return this.id;
     }
 
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
+	public String getMerchantId() {
+		return merchantId;
+	}
+
+
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+
+
+	public String getDealTitle() {
+		return dealTitle;
+	}
+
+
+	public void setDealTitle(String dealTitle) {
+		this.dealTitle = dealTitle;
+	}
+
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+
+	public BigDecimal getStorePrice() {
+		return storePrice;
+	}
+
+
+	public void setStorePrice(BigDecimal storePrice) {
+		this.storePrice = storePrice;
+	}
+
+
+	public String getAppUrl() {
+		return appUrl;
+	}
+
+
+	public void setAppUrl(String appUrl) {
+		this.appUrl = appUrl;
+	}
+
+
+	public String getNotes() {
+		return notes;
+	}
+
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+    
+    
+
 }
