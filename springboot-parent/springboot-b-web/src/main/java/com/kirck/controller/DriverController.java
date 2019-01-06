@@ -17,6 +17,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.kirck.commen.constants.RedisConstants;
 import com.kirck.commen.utils.UUIDUtils;
 import com.kirck.entity.MerchantDeal;
+import com.kirck.service.IDianPingService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +37,9 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("driver")
 public class DriverController extends BaseController{
+	
+	@Autowired
+	private IDianPingService dianPingService;
 
     @Resource
     RedisTemplate<String, List<Map<String,Object>>> redisTemplate;
@@ -99,11 +104,14 @@ public class DriverController extends BaseController{
 			String href = webElement.findElement(By.cssSelector("a.tg-floor-img")).getAttribute("href");
 			merchantDeal.setId(UUIDUtils.getNewId());
 			// merchantDeal.setMerchantId(merchantId);
-			merchantDeal.setNotes(element.findElement(By.tagName("h4")).getText());
-			merchantDeal.setPrice(new BigDecimal(element.findElement(By.tagName("em")).getText()));
-			merchantDeal.setStorePrice(new BigDecimal(element.findElement(By.tagName("del")).getText()));
-
+			merchantDeal.setDealTitle(webElement.findElement(By.tagName("h4")).getText());
+			//merchantDeal.setNotes(webElement.findElement(By.tagName("h4")).getText());
+			merchantDeal.setPrice(new BigDecimal(webElement.findElement(By.tagName("em")).getText()));
+			merchantDeal.setStorePrice(new BigDecimal(webElement.findElement(By.tagName("del")).getText()));
+			merchantDeal.setUrl(href);
+			merchantDeals.add(merchantDeal);
 		}
+		dianPingService.saveOrUpdate(merchantDeals);
 		closeBrowser(browser);
 		return "hello";
 	}
