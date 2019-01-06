@@ -49,18 +49,22 @@
 		    <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring</artifactId>
-            <version>${shiro.version}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.crazycake/shiro-redis -->
-		<dependency>
-		    <groupId>org.crazycake</groupId>
-		    <artifactId>shiro-redis</artifactId>
-		    <version>${shiro-redis.version}</version>
-		</dependency>
-        
+         <dependency>
+             <groupId>org.seleniumhq.selenium</groupId>
+             <artifactId>selenium-java</artifactId>
+             <version>3.14.0</version>
+         </dependency>
       </dependencies>
-     <packaging>war</packaging>
+	<packaging>war</packaging>  
+	<build>  
+    <plugins>  
+        <plugin>  
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-war-plugin</artifactId>  
+            <configuration>  
+                <failOnMissingWebXml>false</failOnMissingWebXml>  
+            </configuration>  
+        </plugin>  
+    </plugins>  
+</build> 
 </project>

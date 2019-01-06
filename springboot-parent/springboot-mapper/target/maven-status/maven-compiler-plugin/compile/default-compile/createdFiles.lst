@@ -1,5 +1,0 @@
-com\kirck\config\DruidConfiguration.class
-com\kirck\config\DruidConfiguration$IDataSourceProperties.class
-com\kirck\config\MybatisPlusConfig.class
-com\kirck\mapper\UserMapper.class
-com\kirck\mapper\AccountMapper.class

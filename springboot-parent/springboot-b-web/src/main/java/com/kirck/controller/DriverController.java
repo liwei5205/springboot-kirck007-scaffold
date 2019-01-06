@@ -47,7 +47,7 @@ public class DriverController extends BaseController{
     @ResponseBody
     @ApiOperation(value = "欢迎", httpMethod = "GET")
     public String login(Integer index){
-        
+
         //打开浏览器
         browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/project/chromedriver.exe");
         boolean f = true;

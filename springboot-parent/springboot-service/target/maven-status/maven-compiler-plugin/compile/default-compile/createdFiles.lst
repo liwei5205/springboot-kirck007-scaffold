@@ -1,7 +1,0 @@
-com\kirck\service\impl\InitServiceImpl.class
-com\kirck\service\impl\UserServiceImpl.class
-com\kirck\service\UserService.class
-com\kirck\service\AccountService.class
-com\kirck\service\IInitService.class
-com\kirck\service\impl\AbstractService.class
-com\kirck\service\impl\AccountServiceImpl.class

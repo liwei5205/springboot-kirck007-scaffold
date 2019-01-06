@@ -55,5 +55,16 @@
              <version>3.14.0</version>
          </dependency>
       </dependencies>
-     <packaging>war</packaging>
+	<packaging>war</packaging>  
+	<build>  
+    <plugins>  
+        <plugin>  
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-war-plugin</artifactId>  
+            <configuration>  
+                <failOnMissingWebXml>false</failOnMissingWebXml>  
+            </configuration>  
+        </plugin>  
+    </plugins>  
+</build> 
 </project>

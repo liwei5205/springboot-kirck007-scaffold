@@ -1,3 +1,9 @@
-F:\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\vo\TokenVo.java
-F:\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\User.java
-F:\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\Account.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\MerchantDeal.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\DealInfo.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\MerchantBranch.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\vo\TokenVo.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\BranchDeal.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\Merchant.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\Area.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\BranchPoint.java
+D:\project\springboot-kirck007-scaffold\springboot-parent\springboot-entity\src\main\java\com\kirck\entity\User.java

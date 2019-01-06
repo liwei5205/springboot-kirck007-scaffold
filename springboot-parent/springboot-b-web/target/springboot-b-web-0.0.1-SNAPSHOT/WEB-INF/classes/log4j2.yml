@@ -48,6 +48,3 @@ Configuration:
         AppenderRef:  
           - ref: CONSOLE  
           - ref: ROLLING_FILE  
-          
-url:
-  nologin: /login,/logout,/nol/**,/wechat/**,/oapi/**,/organ/**,/niumingtest/**
