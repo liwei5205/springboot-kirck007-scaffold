@@ -42,8 +42,6 @@ public class MerchantDeal extends Model<MerchantDeal> {
 	private BigDecimal storePrice;
 	@TableField("dianping_url_id")
 	private String dianpingUrlId;
-	@TableField("notes")
-	private String notes;
 	@TableField("create_date")
 	private LocalDateTime createDate;
 
@@ -98,14 +96,6 @@ public class MerchantDeal extends Model<MerchantDeal> {
 
 	public void setDianpingUrlId(String dianpingUrlId) {
 		this.dianpingUrlId = dianpingUrlId;
-	}
-
-	public String getNotes() {
-		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
 	}
 
 	public LocalDateTime getCreateDate() {

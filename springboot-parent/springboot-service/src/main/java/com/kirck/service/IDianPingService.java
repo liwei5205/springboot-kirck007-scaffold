@@ -16,5 +16,11 @@ public interface IDianPingService {
 	 * 获取最近一条记录的url_id
 	 * @return
 	 */
-	String getTheLastDeal();
+	MerchantDeal getTheLastDeal();
+	
+	/**
+	 * 更新
+	 * @param lastDeal
+	 */
+	void update(MerchantDeal lastDeal);
 }

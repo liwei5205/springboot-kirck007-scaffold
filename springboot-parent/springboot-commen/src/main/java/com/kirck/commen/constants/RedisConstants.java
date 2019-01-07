@@ -19,6 +19,9 @@ public class RedisConstants {
 		 String KIRCK = "kirck" + SPLITTER;
 		 String KIRCK007 = "KIRCK007" + SPLITTER;
 		String DIANPING = "dianping" + SPLITTER;
+		String LIST = "list" + SPLITTER;
+		String CITY = "city" + SPLITTER;
+
 	}
 
 	public interface OBJTYPE {

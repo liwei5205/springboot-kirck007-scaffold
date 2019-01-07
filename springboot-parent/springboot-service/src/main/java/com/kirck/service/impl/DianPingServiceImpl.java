@@ -1,5 +1,6 @@
 package com.kirck.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -18,16 +19,22 @@ public class DianPingServiceImpl extends AbstractService implements IDianPingSer
 	@Override
 	public void saveOrUpdate(List<MerchantDeal> merchantDeals) {
 		for (MerchantDeal merchantDeal : merchantDeals) {
+			merchantDeal.setCreateDate(LocalDateTime.now());
 			merchantDealMapper.insert(merchantDeal);
 		}
 	}
 
 	@Override
-	public String getTheLastDeal() {
+	public MerchantDeal getTheLastDeal() {
 		QueryWrapper<MerchantDeal> merchantDealWrapper = new QueryWrapper<MerchantDeal>();
 		merchantDealWrapper.orderByDesc("create_date");
-		MerchantDeal merchantDeal = merchantDealMapper.selectOne(merchantDealWrapper);
-		return merchantDeal==null?"-1":merchantDeal.getDianpingUrlId();
+		merchantDealWrapper.last("limit 1");
+		return merchantDealMapper.selectOne(merchantDealWrapper);
+	}
+
+	@Override
+	public void update(MerchantDeal lastDeal) {
+		merchantDealMapper.updateById(lastDeal);
 	}
 
 }

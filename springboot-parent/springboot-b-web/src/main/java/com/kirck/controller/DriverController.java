@@ -1,21 +1,22 @@
 package com.kirck.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,10 +26,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.kirck.commen.NumberConstants;
 import com.kirck.commen.constants.RedisConstants;
+import com.kirck.commen.constants.SysConstants;
+import com.kirck.commen.utils.TitleUtils;
 import com.kirck.commen.utils.UUIDUtils;
 import com.kirck.entity.MerchantDeal;
 import com.kirck.service.IDianPingService;
+import com.kirck.utils.BrowserUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,78 +49,66 @@ public class DriverController extends BaseController{
     @Resource
     RedisTemplate<String, List<Map<String,Object>>> redisTemplate;
 
-    private static ChromeDriver browser;
-    private final static String HOMEURL = "http://www.dianping.com";
-    private final static String LOGINURL = "https://account.dianping.com/login";
-    private final static String NEWDEALURL = "http://t.dianping.com/list/shanghai-category_1?desc=1&sort=new&pageIndex=";
-    private final static String COOKIEPATH = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.COOKIES;
-    private final static String CATEGORYPATH = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.CATEGORY;
-    private final static String  USERNAME = "18571844624";
-    private final static String  PASSWORD = "Qq276532727";
 
 	@GetMapping(value = "/hello")
 	@ResponseBody
 	@ApiOperation(value = "欢迎", httpMethod = "GET")
-	public String setCategoryAll(Integer index) {
+	public String setCategoryAll() {
+		 //查找最新的折扣信息记录
+		MerchantDeal lastDeal = dianPingService.getTheLastDeal();
+        //打开浏览器
+        ChromeDriver webDriver= (ChromeDriver) BrowserUtils.openBrowser(SysConstants.SysConfig.CHROMEDRIVER, SysConstants.SysConfig.CHROMEDRIVERPATH);
+        //设置缓存
+        setCookie(webDriver);
+        // 跳转到最新信息链接
+        //"http://t.dianping.com/deal/35503903"
+        String url = SysConstants.SysConfig.DIANPINGDEAl+SysConstants.Symbol.SLASH+lastDeal.getDianpingUrlId();
 
-		// 打开浏览器
-		browser = (ChromeDriver) openBrowser("webdriver.chrome.driver", "D:/project/chromedriver.exe");
-		boolean f = true;
-		while (f) {
-			// 看一下有没有cookie缓存
-			List<Map<String, Object>> cookies = redisTemplate.opsForValue().get(COOKIEPATH + USERNAME);
-			if (cookies == null) {
-				// 重新登陆
-				loginDianPing(browser, USERNAME, PASSWORD);
-			} else {
-				// 清除原有cookie
-				browser.manage().deleteAllCookies();
-				// 添加cookie需要访问一个同域名页面
-				browser.get(HOMEURL);
-				for (Map<String, Object> temp : cookies) {
-					// 添加cookies
-					Cookie parse = JSONObject.parseObject(JSONObject.toJSONString(temp), Cookie.class);
-					browser.manage().addCookie(parse);
-				}
-				f = false;
-			}
-		}
-		// 跳转到最新信息链接
-		browser.get(NEWDEALURL + index);
-		// 等待是否跳转成功
-		try {
-			while (true) {
-				Thread.sleep(2000L);
-				if (!browser.getCurrentUrl().startsWith(LOGINURL)) {
-					break;
-				}
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		// 团购信息存储
-		List<MerchantDeal> merchantDeals = new ArrayList<MerchantDeal>();
+        webDriver.get(url);
+        // 等待是否跳转成功
+        try {
+            while (true) {
+                Thread.sleep(2000L);
+                if (!webDriver.getCurrentUrl().startsWith(SysConstants.SysConfig.DIANPINGLOGINURL)) {
+                    break;
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-		WebElement element = browser.findElement(By.cssSelector("div.tg-tab-box.tg-floor.on"));
-		// 获取属性值
-		List<WebElement> elements2 = element.findElements(By.cssSelector("div.tg-floor-item-wrap"));
-		for (WebElement webElement : elements2) {
-			MerchantDeal merchantDeal = new MerchantDeal();
-			String href = webElement.findElement(By.cssSelector("a.tg-floor-img")).getAttribute("href");
-			merchantDeal.setId(UUIDUtils.getNewId());
-			// merchantDeal.setMerchantId(merchantId);
-			merchantDeal.setDealTitle(webElement.findElement(By.tagName("h4")).getText());
-			//merchantDeal.setNotes(webElement.findElement(By.tagName("h4")).getText());
-			merchantDeal.setPrice(new BigDecimal(webElement.findElement(By.tagName("em")).getText()));
-			merchantDeal.setStorePrice(new BigDecimal(webElement.findElement(By.tagName("del")).getText()));
-			//merchantDeal.setUrl(href);
-			merchantDeals.add(merchantDeal);
+        //解析团购信息
+        //获取商户id
+        //String merchantId = webDriver
+        String title = webDriver.findElement(By.cssSelector("h2[class=sub-title]")).getText();
+        try {
+        	title = TitleUtils.getTitle(title);
+        }catch (Exception e) {
+        	logger.error("titleStringErro",e);
 		}
-		dianPingService.saveOrUpdate(merchantDeals);
-		closeBrowser(browser);
+        lastDeal.setDealTitle(title);
+        
+        //获取团购适用分店列表
+        WebElement shopUl =  webDriver.findElement(By.cssSelector("ul[class=shoplist]"));
+        List<WebElement> shoplist = shopUl.findElements(By.tagName("li"));
+        System.out.println("shoplist:"+shoplist.size());
+        //获取当前展开分店
+        String openShopId = webDriver.findElement(By.cssSelector("li.J_content_list.on")).getAttribute("data-shop-id");
+        System.out.println("openShopId:"+openShopId);
+        //http://www.dianping.com/shop/549201
+        url = SysConstants.SysConfig.DIANPINGHOMEURL+SysConstants.Symbol.SLASH+SysConstants.SysConfig.SHOP+SysConstants.Symbol.SLASH+openShopId;
+        webDriver.get(url);
+        // 等待是否跳转成功
+        WebDriverWait wait = new WebDriverWait(webDriver, 10); // 最多等10秒
+        String brandUrl = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("a.more-shop"))).getAttribute("href");
+        //获取品牌信息
+        
+        dianPingService.update(lastDeal);
+        BrowserUtils.closeBrowser(webDriver);
+        
 		return "hello";
 	}
-
+	/*
 	private void setCategoryAll() {
 		List<WebElement> elements = browser.findElements(By.cssSelector("dl.tg-classify-all.tg-classify-flat.Fix"));
 		for (WebElement element : elements) {
@@ -130,44 +123,79 @@ public class DriverController extends BaseController{
 			redisTemplate.opsForHash().putAll(CATEGORYPATH, map);
 		}
 	}
+	*/
+	
+	   private MerchantDeal parseDealInfo(ChromeDriver webDriver, MerchantDeal lastDeal) {
+		   
+		   return null;
+	}
 
-    private WebDriver openBrowser(String driverType, String driverPath){
-        System.getProperties().setProperty(driverType,driverPath);
-        browser = new ChromeDriver();
-        //等待
-        browser.manage().timeouts()
-                .implicitlyWait(10, TimeUnit.SECONDS);
-        return browser;
+	/**
+     * 解析团购信息
+     * @param webDriver
+     */
+    private List<MerchantDeal> parseDeal(ChromeDriver webDriver,String lastUrlId) {
+        // 团购信息存储
+        List<MerchantDeal> merchantDeals = new ArrayList<MerchantDeal>();
+        WebElement element = webDriver.findElement(By.cssSelector("div.tg-tab-box.tg-floor.on"));
+        // 获取属性值
+        List<WebElement> elements2 = element.findElements(By.cssSelector("div.tg-floor-item-wrap"));
+        for (WebElement webElement : elements2) {
+            MerchantDeal merchantDeal = new MerchantDeal();
+            String href = webElement.findElement(By.cssSelector("a.tg-floor-img")).getAttribute("href");
+            String urlId = href.substring(href.lastIndexOf('/')+NumberConstants.ONE);
+            if(lastUrlId.equals(urlId)) {
+            	break;
+            }
+            merchantDeal.setId(UUIDUtils.getNewId());
+            merchantDeal.setCreateDate(LocalDateTime.now());
+            // merchantDeal.setMerchantId(merchantId);
+            merchantDeal.setDealTitle(webElement.findElement(By.tagName("h4")).getText());
+            //merchantDeal.setNotes(webElement.findElement(By.tagName("h4")).getText());
+            merchantDeal.setPrice(new BigDecimal(webElement.findElement(By.tagName("em")).getText()));
+            merchantDeal.setStorePrice(new BigDecimal(webElement.findElement(By.tagName("del")).getText()));
+            merchantDeal.setDianpingUrlId(urlId);
+            merchantDeals.add(merchantDeal);
+        }
+        return merchantDeals;
     }
 
-    private void closeBrowser(WebDriver webDriver){
-        webDriver.close();
-    }
-
-    private void loginDianPing(WebDriver webDriver,String userName,String password){
-        //设定网址
-        webDriver.get(LOGINURL);
-        //显示等待控制对象
-/*        WebDriverWait webDriverWait=new WebDriverWait(webDriver,10);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(By.linkText("账号登录"))).click();
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("tab-account"))).click();
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("account-textbox"))).sendKeys(userName);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("password-textbox"))).sendKeys(password);
-        webDriver.findElement(By.id("login-button-account")).click();*/
-        //等待2秒用于页面加载，保证Cookie响应全部获取。
-        try {
-            Thread.sleep(10000);
-        }catch (InterruptedException e){
-            e.printStackTrace();
+    private void setCookie(ChromeDriver webDriver) {
+        String cookiePath = RedisConstants.KEYPRE.DIANPING+RedisConstants.OBJTYPE.COOKIES + SysConstants.SysConfig.USERNAME;
+        List<Map<String, Object>> cookies = null;
+        while (cookies==null){
+            //查找缓存
+            cookies =  redisTemplate.opsForValue().get(cookiePath);
+            if(cookies==null) {
+                //没有缓存需要登陆
+                cookies = BrowserUtils.loginDianPing(webDriver, SysConstants.SysConfig.USERNAME, SysConstants.SysConfig.PASSWORD);
+                redisTemplate.opsForValue().set(cookiePath,cookies);
+            }
         }
-
-        Set<Cookie> cookies=webDriver.manage().getCookies();
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        for (Cookie cookie : cookies) {
-            list.add(cookie.toJson());
-        }
-        if(cookies!=null){
-            redisTemplate.opsForValue().set(COOKIEPATH+userName,list);
+        // 清除原有cookie
+        webDriver.manage().deleteAllCookies();
+        // 添加cookie需要访问一个同域名页面
+        webDriver.get(SysConstants.SysConfig.DIANPINGHOMEURL);
+        for (Map<String, Object> map : cookies) {
+            Cookie cookie = JSONObject.parseObject(JSONObject.toJSONString(map), Cookie.class);
+            webDriver.manage().addCookie(cookie);
         }
     }
+    
+	@GetMapping(value = "/proxy")
+	@ResponseBody
+	@ApiOperation(value = "代理测试", httpMethod = "GET")
+	public String proxy() {
+		//打开浏览器
+        ChromeDriver webDriver= (ChromeDriver) BrowserUtils.openBrowserWithProxy(SysConstants.SysConfig.CHROMEDRIVER, SysConstants.SysConfig.CHROMEDRIVERPATH,"");
+	     webDriver.get("http://www.dianping.com/");
+	     try {
+	                Thread.sleep(2000L);   
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	     return "xxx";
+		
+	}
+
 }

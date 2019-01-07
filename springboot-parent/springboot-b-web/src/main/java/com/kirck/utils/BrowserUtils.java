@@ -2,8 +2,12 @@ package com.kirck.utils;
 
 import com.kirck.commen.constants.SysConstants;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,4 +55,20 @@ public class BrowserUtils {
     public static void closeBrowser(ChromeDriver webDriver) {
         webDriver.close();
     }
+
+	public static ChromeDriver openBrowserWithProxy(String chromedriver, String chromedriverpath,String proxyIpAndPort) {
+		System.getProperties().setProperty(chromedriver,chromedriverpath);
+        Proxy proxy = new Proxy();
+		proxy.setHttpProxy(proxyIpAndPort).setFtpProxy(proxyIpAndPort ).setSslProxy(proxyIpAndPort);
+		DesiredCapabilities cap = new DesiredCapabilities();
+		cap.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
+		cap.setCapability(CapabilityType.ForSeleniumServer.ONLY_PROXYING_SELENIUM_TRAFFIC, true);
+		cap.setCapability(CapabilityType.PROXY, proxy);
+		ChromeOptions chromeOptions = new ChromeOptions().merge(cap);
+        browser = new ChromeDriver(chromeOptions);
+        //等待
+        browser.manage().timeouts()
+                .implicitlyWait(10, TimeUnit.SECONDS);
+        return browser;
+	}
 }

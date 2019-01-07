@@ -49,7 +49,9 @@ public class SysConstants {
 		String DIANPINGHOMEURL = "http://www.dianping.com";
 		//"http://t.dianping.com/list/shanghai-category_1?desc=1&sort=new&pageIndex=0"
 		String DIANPINGLIST = "http://t.dianping.com/list";
+		String DIANPINGDEAl = "http://t.dianping.com/deal";
 		String CATEGORY = "category";
+		String SHOP = "shop";
 		String NEWSORT = "desc=1&sort=new&pageIndex=";
 		String USERNAME = "18571844624";
 		String PASSWORD = "Qq276532727";
