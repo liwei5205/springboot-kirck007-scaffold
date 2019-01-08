@@ -8,14 +8,14 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.kirck.commen.NumberConstants;
 import com.kirck.commen.constants.RedisConstants;
 import com.kirck.commen.constants.SysConstants;
-import com.kirck.commen.utils.TitleUtils;
 import com.kirck.commen.utils.UUIDUtils;
 import com.kirck.entity.MerchantDeal;
 import com.kirck.service.IDianPingService;
@@ -65,47 +64,14 @@ public class DriverController extends BaseController{
         String url = SysConstants.SysConfig.DIANPINGDEAl+SysConstants.Symbol.SLASH+lastDeal.getDianpingUrlId();
 
         webDriver.get(url);
+		
         // 等待是否跳转成功
-        try {
-            while (true) {
-                Thread.sleep(2000L);
-                if (!webDriver.getCurrentUrl().startsWith(SysConstants.SysConfig.DIANPINGLOGINURL)) {
-                    break;
-                }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //解析团购信息
-        //获取商户id
-        //String merchantId = webDriver
-        String title = webDriver.findElement(By.cssSelector("h2[class=sub-title]")).getText();
-        try {
-        	title = TitleUtils.getTitle(title);
-        }catch (Exception e) {
-        	logger.error("titleStringErro",e);
-		}
-        lastDeal.setDealTitle(title);
-        
-        //获取团购适用分店列表
-        WebElement shopUl =  webDriver.findElement(By.cssSelector("ul[class=shoplist]"));
-        List<WebElement> shoplist = shopUl.findElements(By.tagName("li"));
-        System.out.println("shoplist:"+shoplist.size());
-        //获取当前展开分店
-        String openShopId = webDriver.findElement(By.cssSelector("li.J_content_list.on")).getAttribute("data-shop-id");
-        System.out.println("openShopId:"+openShopId);
-        //http://www.dianping.com/shop/549201
-        url = SysConstants.SysConfig.DIANPINGHOMEURL+SysConstants.Symbol.SLASH+SysConstants.SysConfig.SHOP+SysConstants.Symbol.SLASH+openShopId;
-        webDriver.get(url);
-        // 等待是否跳转成功
-        WebDriverWait wait = new WebDriverWait(webDriver, 10); // 最多等10秒
-        String brandUrl = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("a.more-shop"))).getAttribute("href");
-        //获取品牌信息
-        
-        dianPingService.update(lastDeal);
-        BrowserUtils.closeBrowser(webDriver);
-        
+        Actions action = new Actions(webDriver);
+        WebDriverWait wait = new WebDriverWait(webDriver, 10);
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.cssSelector("div.list-holder"))))).perform();;
+        wait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.cssSelector("ul.shoplist"))));
+        Document d =  Jsoup.parse(webDriver.getPageSource());
+        Elements es  = d.getElementsByAttribute("data-shop-id");
 		return "hello";
 	}
 	/*
